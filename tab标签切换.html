@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Document</title>
+    <style type="text/css">
+    *{margin: 0;padding: 0;}
+
+.dv{
+    float: left;
+    width: 50px;height: 20px;
+    background-color: #ccc;
+    margin: 0 10px;
+
+}
+.dv span{
+    display:block;
+}
+.dv2{
+    height: 250px;
+    width: 500px;
+    background-color: skyblue;
+    display: none;
+    position:absolute;
+    top:20px;left: 0;
+}
+.dpB{
+    display:block;
+}
+.dpN{
+    display:none;
+}
+.sbgb{
+    background-color: yellow;
+}
+    </style>
+
+</head>
+<body>
+        <div id="nav">
+            <div class="dv"><span>111</span><div class="dv2"><p>实打实大所大所</p></div></div>
+            <div class="dv"><span>111</span><div class="dv2"><p>我觉得就安静看大家来看j</p></div></div>
+            <div class="dv"><span>111</span><div class="dv2"><p>会坚实的看环境和空间哈点击</p></div></div>
+            <div class="dv"><span>111</span><div class="dv2"><p>都按收盘价达看到那</p></div></div>
+        </div>
+       
+    <script type="text/javascript">
+(function(){
+    var dv2=document.getElementsByClassName('dv2');
+    var sp=document.getElementsByTagName('span');
+for(var i=0;i<sp.length;i++){
+    dv2[0].className='dv2 dpB';
+    sp[0].className='sbgb';
+    (function(i){
+
+        sp[i].onmouseover=function(){
+            for(var j=0;j<dv2.length;j++){
+                dv2[j].className='dv2 dpN';
+                sp[j].className='';
+            }
+            sp[i].className='sbgb';
+        dv2[i].className='dv2 dpB';
+    }
+
+
+})(i)
+    
+}
+    
+
+})()
+    </script>
+</body>
+</html>

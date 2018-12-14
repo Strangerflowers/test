@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>city</title>
+    <style>
+    ul { list-style: none; margin: 0; }
+    #city { position: relative; }
+    .citylist { width: 300px; overflow: hidden; margin-left: 50px; padding: 0; border: 1px solid #ccc; display: none; position: absolute; top: 22px; }
+    #choose { display: flex; }
+    .citylist li { height: 32px; border-bottom: 1px dotted #ccc; }
+    .name { float: left; }
+    .code { float: right; }
+    #output { color: green; }
+    .gl { background: rgba(255, 24, 56, .6); }
+    label[for='txt'] { width: 50px; display: inline-block; }
+    input { width: 171px; height: 19px; padding: 0; border: 1px solid #f93; }
+    </style>
+    <script>
+    window.onload = function() {
+        var arr = [{ "name": "北京", "id": 110100, "hot": true },
+            { "name": "上海", "id": 310000, "hot": true },
+            { "name": "南京市", "id": 320100 },
+            { "name": "广州", "id": 440100, "hot": true },
+            { "name": "深圳", "id": 440300, "hot": true },
+            { "name": "成都", "id": 510100 },
+            { "name": "杭州", "id": 330100 },
+            { "name": "南宁", "id": 450100 },
+            { "name": "大连", "id": 210200 }
+        ];
+        var city = document.getElementById('city');
+        var output = document.getElementById('output');
+        var txt = document.getElementById('txt');
+        var citylist = city.getElementsByClassName('citylist')[0];
+        var content = '';
+        for (var i = 0, j = arr.length; i < j; i++) {
+            var li = document.createElement('li');
+            if (arr[i].hot) {
+                li.className = 'gl';
+            }
+            var fl = document.createElement('span');
+            fl.className = 'name';
+            var fr = document.createElement('span');
+            fr.className = 'code';
+            fl.innerText = arr[i].name;
+            fr.innerText = arr[i].id;
+            li.appendChild(fl);
+            li.appendChild(fr);
+            citylist.appendChild(li);
+        }
+        citylist.addEventListener('click', function(e) {
+            e = e || window.event;
+            var target = e.target || e.srcElement;
+            var span ='';
+            if (target.tagName.toLocaleLowerCase() === 'li') {
+                span= target.firstChild.innerText;
+            }else if(target.className ==='name'){
+                span = target.innerText;
+                citylist.style.display = 'none';
+            }else if(target.className==='code'){
+                span = target.parentNode.firstChild.innerText;
+            }
+            output.innerText = '你选择了' + span
+            txt.value = span;
+
+        });
+        txt.addEventListener('focus', function(e) {
+            // console.log('getfocus');
+            citylist.style.display = 'block';
+        });
+
+        txt.addEventListener('blur', function(e) {
+            // console.log('blur');
+            setTimeout(function() {
+                citylist.style.display = 'none';
+            }, 500);
+        })
+    }
+    </script>
+</head>
+
+<body>
+    <div id="city">
+        <div id="choose">
+            <label for="txt">请选择</label>
+            <input type="text" id="txt" name="txt" />
+            <label for="" id="output">11</label>
+        </div>
+        <ul class="citylist">
+            <!--             <li><span class='name'>广州</span><span class='code'>214214</span></li> -->
+        </ul>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>购物流程</title>
+	<link rel="stylesheet" href="css/common.css">
+	<style>
+		ul{list-style: none;}
+		.goodslist ul{overflow:hidden;}
+		.goodslist li{position:relative;border-bottom:1px dotted #ddd;padding-bottom:10px;margin-bottom:10px;}
+		.goodslist li img{width:120px;}
+		.goodslist li p{margin:5px 0;}
+		.price span{color:#f00;}
+		.price span::before,.price del::before{content:'￥';}
+		.subPrice{padding:5px 20px;color:#f00;font-weight:bold;text-align:right;}
+
+		.btn-close{position:absolute;top:0;right:0;padding:0 5px;cursor:default;}
+		.btn-close:hover{background-color:#f00;color:#fff;}
+
+		.qty input{width:50px;}
+	</style>
+	<script src="js/common.js"></script>
+	<script>
+		/*
+			购物流程
+		 */
+		document.addEventListener('DOMContentLoaded',function(){
+			// 加载说明
+			let explain = document.querySelector('.explain-right');
+			let xhr = new XMLHttpRequest();
+			xhr.onload = function(e){
+				console.log(xhr.responseText);
+				explain.innerHTML = xhr.responseText;
+
+			}
+			xhr.open('get','explain.html?v='+Date.now(),true);
+			xhr.send();
+
+			let goodslist = document.querySelector('.goodslist');
+			var subPrice = document.querySelector('.subPrice');
+			var btnClear = document.querySelector('#btnClear');
+
+			let data = Cookie.get('carlist');
+			if(data.length>0){
+				data = JSON.parse(data);
+			}else{
+				data = [];
+			}
+
+			
+			render();
+
+
+			// 清空购物车
+			btnClear.onclick = function(){
+				Cookie.remove('carlist');
+				data = [];
+
+				render();
+			}
+
+			// 删除单个商品
+			goodslist.onclick = function(e){
+				if(e.target.className === 'btn-close'){
+					// 获取当前li
+					var currentLi = e.target.parentNode;
+
+					// 获取当前guid
+					var guid = currentLi.dataset.guid;
+
+					for(var i=0;i<data.length;i++){
+						if(data[i].id === guid){
+							data.splice(i,1);
+							break;
+						}
+					}
+
+					// 重新写入cookie
+					Cookie.set('carlist',JSON.stringify(data));
+
+					// 重新渲染页面
+					render();
+
+				}
+			}
+
+
+			goodslist.oninput = function(e){
+				if(e.target.parentNode.className === 'qty'){
+					// 获取当前li
+					var currentLi = e.target.parentNode.parentNode;
+
+					// 获取当前guid
+					var guid = currentLi.dataset.guid;
+
+					for(var i=0;i<data.length;i++){
+						if(data[i].id === guid){console.log(e.target.value)
+							data[i].qty = e.target.value*1;
+							break;
+						}
+					}
+
+					// 重新写入cookie
+					Cookie.set('carlist',JSON.stringify(data));
+
+					// 重新渲染页面
+					render();
+
+				}
+			}
+			
+
+		    function render(){
+			    // 生成ul
+			    let ul = document.createElement('ul');
+
+			    // 定义变量用于存放总价
+				var total = 0;
+
+			    ul.innerHTML = data.map(goods=>{
+
+			    	total += goods.off*goods.qty;
+
+			    	return `<li data-guid="${goods.id}">
+						<img src="${goods.imgurl}" />
+						<h4>${goods.title} ${goods.category}</h4>
+						<p class="price">原价：<del>${goods.price.toFixed(2)}</del></p>
+						<p class="price">现价：<span>${goods.off.toFixed(2)}&times;${goods.qty}</span></p>
+						<p class="qty">数量：<input type="number" value="${goods.qty}" /></p>
+						<span class="btn-close">&times;</span>
+			    	</li>`
+			    }).join('');
+
+
+			    goodslist.innerHTML = '';
+			    goodslist.appendChild(ul);
+
+			    // 写入总价
+				subPrice.innerHTML = `<span>${total.toFixed(2)}</span>`;
+		    	
+		    }
+		});
+	</script>
+</head>
+<body>
+	<div class="explain explain-right"></div>
+	<div class="container">
+		<div class="goodslist"></div>
+		<div class="subPrice price"></div>
+		<a href="#" id="btnClear">清空购物车</a>
+	</div>
+</body>
+</html>

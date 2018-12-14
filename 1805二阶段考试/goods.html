@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>商品浏览</title>
+	<link rel="stylesheet" href="css/common.css">
+	<style>
+		.price span{color:#f00;}
+		.price span::before,.price del::before{content:'￥';}
+
+		 .star {
+	        width: 135px;
+	        height: 28px;
+	         background: url(img/star.gif) repeat-x 0 0;
+	    }
+	    
+	    .star span{
+	       	display:block;
+	        background: url(img/star.gif) repeat-x 0 -29px;
+	        height: 28px;
+	    }
+	</style>
+	<script src="js/common.js"></script>
+	<script>
+		/*
+			商品浏览
+		 */
+		document.addEventListener('DOMContentLoaded',function(){
+			// 加载说明
+			let explain = document.querySelector('.explain-right');
+			let xhr = new XMLHttpRequest();
+			xhr.onload = function(e){
+				console.log(xhr.responseText);
+				explain.innerHTML = xhr.responseText;
+
+			}
+			xhr.open('get','explain.html?v='+Date.now(),true);
+			xhr.send();
+
+
+			let currentGoods = document.querySelector('.currentGoods');
+
+			let goods = Cookie.get('goods');
+
+			if(goods.length>0){
+				goods = JSON.parse(goods);
+			}
+
+			let guid = goods.id;
+
+			let img = document.createElement('img');
+			img.src = goods.imgurl;
+
+			let h1 = document.createElement('h1');
+			h1.innerText = goods.title;
+
+			let oldPrice = document.createElement('p');
+			oldPrice.className = 'price'
+			oldPrice.innerHTML = `原价：<del>${goods.price.toFixed(2)}</del>`;
+
+			let price = document.createElement('p');
+			price.className = 'price';
+			price.innerHTML = `价格：<span>${goods.off.toFixed(2)}</span>`;
+
+			let hot = document.createElement('p');
+			hot.innerHTML = `人气：${goods.hot}`
+
+			let star = document.createElement('p');
+			star.className = 'star star'+goods.star;
+			star.innerHTML = `<span style="width:${27*goods.star}px"></span>`;
+
+			let btnAdd = document.createElement('button');
+			btnAdd.className = 'btnAdd';
+			btnAdd.innerHTML = '添加到购物车';
+
+			let btnCheckout = document.createElement('button');
+			btnCheckout.className = 'btnCheckout';
+			btnCheckout.innerHTML = '结算';
+
+			currentGoods.appendChild(img);
+			currentGoods.appendChild(h1);
+			currentGoods.appendChild(oldPrice);
+			currentGoods.appendChild(price);
+			currentGoods.appendChild(hot);
+			currentGoods.appendChild(star);
+			currentGoods.appendChild(btnAdd);
+			currentGoods.appendChild(btnCheckout);
+
+			let carlist = Cookie.get('carlist');
+			if(carlist.length>0){
+				carlist = JSON.parse(carlist);
+			}else{
+				carlist = [];
+			}
+
+			// 添加到购物车
+			btnAdd.onclick = function(){
+				let has = false;
+				for(let g of carlist){
+					if(g.id === guid){
+						g.qty++;
+						has = true;
+						break;
+					}
+				}
+
+				// 如果不存在
+				if(!has){
+					let g = JSON.parse(JSON.stringify(goods));
+					g.qty = 1;
+					carlist.unshift(g);
+				}
+
+				// 写入Cookie
+				Cookie.set('carlist',JSON.stringify(carlist));
+			}
+
+			// 结算
+			btnCheckout.onclick = function(){
+				location.href = 'car.html';
+			}
+
+		});
+	</script>
+</head>
+<body>
+	<div class="explain explain-right"></div>
+	<div class="container">
+		<div class="currentGoods"></div>
+		
+	</div>
+</body>
+</html>

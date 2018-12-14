@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <script type="text/javascript">
+           var arr=[
+            { name: "刘备", nickname: "小刘", age: 58, gender: "男", hobby: ["撩妹", "装逼", "编草鞋"] },
+            { name: "关羽", nickname: "关二", age: 47, gender: "男", hobby: ["耍大刀", "变脸", "喝酒"] },
+            { name: "张飞", nickname: "张三", age: 45, gender: "男", hobby: ["打架", "喝酒", "耍流氓"] },
+            { name: "赵云", nickname: "赵四", age: 22, gender: "男", hobby: ["打架", "喝酒", "耍帅"] },
+            { name: "貂蝉", nickname: "美女", age: 20, gender: "女", hobby: ["撩汉", "化妆"] },
+            { name: "小乔", nickname: "乔二", age: 18, gender: "女", hobby: ["弹琴", "唱歌", "撩周瑜"] }
+        ]
+        // var all=document.getElementsByClassName(all)[0];
+            var table=document.createElement('table'); 
+            var tbody=document.createElement('tbody');
+            for(var i=0;i<arr.length;i++){
+                var tr=tbody.insertRow(i)
+                for(var j=0;j<arr[i].length;j++){
+                    var td=tr.insertCell(j);
+                    td.innerText=arr[i]arr[j];
+                }
+               
+            }
+        </script>
+    </head>
+    <body>
+        <div id="box">
+            <table class="mytable">
+                <thead>
+                    <tr>
+                        <td class="choose">
+                            <input type="checkbox"  class="all" />
+                        </td>
+                        <td class="num">#</td>
+                        <td class="name">姓名</td>
+                        <td class="nickname">昵称</td>    
+                        <td class="age">年龄</td>
+                        <td class="sex">性别</td>
+                        <td class="hobby">爱好</td>
+                        <td class="ctrl">操作</td>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>微博点赞</title>
+    <link rel="stylesheet" href="css/common.css">
+    <style>
+        <style>
+        ul{list-style: none;padding:0;margin:0;}
+        .msg-list{}
+        .msg-list ul{padding:10px;min-height:200px;max-height:400px;overflow-y:auto;}
+        .msg-list li{position:relative;margin:10px 0;padding:5px;line-height:2;border-bottom:1px dotted #ddd;}
+        .msg-list li time{position:absolute;right:0;top:0;color:#999;}
+        .msg-list li.active{float:right;background-color:#fc0;color:#fff;}
+        .msg-list textarea{display:block;min-height:50px;margin:10px 0;width:100%;box-sizing: border-box;}
+        .qty{text-align:right;}
+        .qty span:first-child{color:#f00;}
+        .content{line-height:2;border-bottom:2px solid #ddd;}
+        .form{display:none;}
+        .head{position:relative;}
+        .head time{padding:0 5px;color:#999;}
+        .head span{position:absolute;top:0;right:0;padding:23px 5px 0;width:20px;background-color: #58bc58;text-align:center;color:#fff;font-size:10px;}
+        .head .zan{right:35px;}
+        .head img{position:absolute;top:5px;left:15%;width:70%;}
+        .dspb{display:block;}
+    </style>
+    <script src="js/common.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded',()=>{
+            var container = document.querySelector('#container');
+            var btnSend = container.querySelector('button');
+            var msgList = container.querySelector('ul');
+            var msg = container.querySelector('textarea');
+            var content = container.querySelector('.content');
+            var form = container.querySelector('.form');
+
+
+            // 先获取cookie值
+            var weibo = Cookie.get('weibo');
+
+            if(!weibo.length){
+                 weibo = {
+                    name:"laoxie",
+                    content:"说说最让人热血沸腾的一句话，我先来：不逼自己一把，你永远都不知道自己有多优秀",
+                    time:'2017-11-11',
+                    zan:1,
+                    comment:[{
+                        name:'lemon',
+                        con:'你可以上二流的大学，但不能过二流的人生',
+                        time:'2017-12-5'
+                    },{
+                        name:'小红',
+                        con:'今晚我就回去逼下自己',
+                        time:'2017-12-6'
+                    },{
+                        name:'小吴',
+                        con:'你不能拼爹，所以只能拼命',
+                        time:'2017-12-7'
+                    }]
+                }
+            }else{
+                weibo = JSON.parse(weibo);
+            }
+
+           init();
+
+            function init(){
+                // 初始化
+                // 写入内容
+                content.innerHTML = `
+                    <div class="head">
+                        <strong>${weibo.name}</strong>
+                        <time>${weibo.time}</time>
+                        <span class="zan"><img src="img/icon/zan.svg">${weibo.zan}</span>
+                        <span class="com"><img src="img/icon/com.svg">${weibo.comment.length}</span>
+                    </div>
+                    <p>${weibo.content}</p>
+                `;
+
+                render();
+                
+            }
+
+    
+
+            msg.onkeyup = function(e){
+                console.log(e.keyCode);
+                if(e.ctrlKey && e.keyCode == 13){
+                    send();
+                    render();
+                }
+            }
+
+
+            container.onclick = e=>{
+                // 点赞
+                if(e.target.className === 'zan' || e.target.parentNode.className === 'zan'){
+                    weibo.zan++;
+
+                    var now = new Date();
+                    now.setDate(now.getDate()+7);
+
+                    // 重写cookie
+                    Cookie.set('weibo',JSON.stringify(weibo),now);
+                    init();
+                }else if(e.target.tagName.toLowerCase() === 'button'){
+                    send();
+
+                    // 重写cookie
+                    var now = new Date();
+                    now.setDate(now.getDate()+7);
+                    Cookie.set('weibo',JSON.stringify(weibo),now);
+                    init();
+                }else if(e.target.className === 'com' || e.target.parentNode.className === 'com'){
+                    form.classList.toggle('dspb');
+                }
+
+
+            }
+
+            function render(){
+
+                msgList.innerHTML = weibo.comment.map(item=>{
+                    return `<li>${item.name} : ${item.con} <time>${item.time}</time></li>`;
+                }).join('');
+                
+            }
+
+            function formatDate(){
+                var now = new Date();
+                var date = now.toLocaleDateString().replace(/\//g,'-');
+                var time = now.toLocaleTimeString().substring(2);
+
+                return date + ' ' + time;
+            }
+
+            function send(){
+                 var _msg = msg.value.trim();
+                weibo.comment.push({
+                    name:'思聪',
+                    con:_msg,
+                    time:formatDate()
+                });
+                msg.value = '';
+                msg.focus();
+            }
+
+           
+        });
+    </script>
+</head>
+
+<body>
+     <div class="explain">
+        <h1>微博点赞</h1>
+        <h4>要求：</h4>
+        <ol>
+            <li>初始化：根据数据生成结构</li>
+            <li>点赞：点击点赞按钮实现点赞数量+1</li>
+            <li>评论：点击评论按钮显示表单</li>
+            <li>发送消息：
+                <ul>
+                    <li>点击提交按钮，发送消息</li>
+                    <li>ctrl+回车发送消息</li>
+                    <li>消息格式：名字+内容+时间（时间格式：2017-3-15 10:50:23）</li>
+                    <li>消息保留7天</li>
+                    <li>每发送一条消息，评论数量+1</li>
+                </ul>
+            </li>
+        </ol>
+    </div>
+
+    <div id="container" class="msg-list">
+        <div class="content"></div>
+        <ul>
+        </ul>
+        <div class="form">
+            <textarea></textarea>
+            <button>提交</button>
+        </div>
+    </div>
+
+</body>
+
+</html>

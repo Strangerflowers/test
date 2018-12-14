@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title></title>
+        <style type="text/css">
+            body,html{background: pink;}
+            #box{position:absolute;width: 500px;height: 250px;margin:0 auto;background: #fff;}
+            h2{border-bottom:1px solid #222;font-size:16px;padding:15px 0 10px 21px;}
+            #in{padding:10px 0 10px 21px;}
+            #btnCheck{margin:10px 0 10px 21px;}
+
+        </style>
+        <script>
+        window.onload= function(){
+
+            var btnCheck = document.getElementById('btnCheck');
+            
+            if(!checkbox.checked)
+                {
+                    alert('请勾选同意');
+                 }
+                 else{
+                               
+                               
+                   btnCheck.onclick =  function show(e){
+
+                    e = e || window.event;
+
+                    var username = document.getElementById('username').value;
+                    if(!/^[a-z][a-z0-9]{5,11}$/.test(username)){
+                        alert('用户名不合法');
+                        return false;
+                    }
+
+                    var password = document.getElementById('password').value;
+                    if(!/^\S{6,18}$/.test(password)){
+                        alert('密码不合法');
+                        return false;
+                    }
+                    return false;
+                 }
+
+
+
+                var box =document.getElementById('box');
+                box.onmousedown = function(e){
+                
+                    var ox = e.clientX - box.offsetLeft;
+                    var oy = e.clientY - box.offsetTop;
+
+                    document.onmousemove = function(evt){
+                        box.style.left = evt.pageX - ox + 'px';
+                        box.style.top = evt.pageY - oy + 'px';
+                        evt.preventDefault ? evt.preventDefault() : evt.returnValue = false;
+                    }
+                }
+
+                document.onmouseup = function(){
+                    document.onmousemove = null;
+                    document.cookie = 'left='+box.style.left;
+                    document.cookie = 'top='+box.style.top;
+                }
+              
+            
+    }
+</script>
+    </head>
+    <body>
+        <form action="03success.html" id="box">
+            <h2>注册登录</h2>
+            <div id="in"><label for="username">账户：</label>
+            <input type="text" name="username"  id="username" /></div>
+            <div id="in"><label for="password">密码：</label>
+            <input type="password" name="password" id="password" /></div>
+            <div id="in"><input type="checkbox" id="checkbox" />
+                <label>同意<a href="">保密协议</a></label></div>
+                <input type="submit" id="btnCheck" value="登录"/>
+                
+        </form>
+    </body>
+</html>

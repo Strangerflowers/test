@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <style type="text/css">
+            label{display: inline-block;width: 100px;}
+            input{width: 200px;margin-bottom:7px;}
+        </style>
+    </head>
+    <body>
+        <div class="box">
+            <h3>用户注册</h3>
+            <label for="uname">用户名:</label><input type="text" id="uname" /><br />
+            <label for="password">密码:</label><input type="text" id="password" /><br />
+            <input type="button" value="注册" class="but" />
+        </div>
+
+
+        <script src="common.js" type="text/javascript"></script>
+        <script type="text/javascript">
+             document.addEventListener('DOMContentLoaded',function(){
+                var uname = document.querySelector('#uname');
+                var password = document.querySelector('#password');
+                var but = document.querySelector('.but');
+                var arr = [];
+                but.onclick = function(){
+                    var uname_ = uname.value;
+                    var password_ = password.value;
+                    //获取cookie值,遍历数组进行对比
+                    var cookie = Cookie.getCookie('uname');
+                    //没有cookie时转为空数组
+                    cookieArr = cookie == ''? [] : JSON.parse(cookie);
+                    //遍历数组查找是否存在用户名,有则返回true;
+                    var res = cookieArr.some(function(item){
+                        return item.uname==uname_;
+                        
+                    });
+
+                    //判断是否存在用户名,存在则终止函数执行;
+                    if(res){
+                            alert('用户名已存在');
+                            return;
+                    }
+                       
+                    //写入cookie
+                    var obj = {};
+                    obj.uname = uname_;
+                    obj.password = password_;
+                    arr.push(obj);
+                    document.cookie = 'uname=' + JSON.stringify(arr);
+                    //注册成功
+                    alert('注册成功');
+                    location.href = 'denglu.html';
+                    }
+                }
+
+             })
+        </script>
+        
+    </body>
+</html>

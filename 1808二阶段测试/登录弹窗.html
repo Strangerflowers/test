@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>登录弹窗</title>
+	<link rel="stylesheet" href="css/common.css">
+	<style>
+		.popover{position:absolute;z-index:10;width:500px;border:2px solid #ddd;padding:5px;background-color:#fff;}
+		.popover h4{margin:0;padding:0 10px;line-height:2;border-bottom:1px solid #ddd;}
+		.popover .content{padding:15px;min-height:100px;}
+		.popover .btn-close{position: absolute;right:5px;top:5px;padding:5px;}
+		.popover .btn-close:hover{background-color: #ac2925;color:#fff;}
+		.overlay{position: fixed;top:0;left:0;bottom:0;right:0;background-color: rgba(0,0,0,.3)}
+
+
+		.content label[for]{display:inline-block;width:20%;padding:0 15px;text-align:right;box-sizing:border-box;}
+		.content #username,.content #password{display: inline-block;width:70%;height:26px;line-height:26px;box-sizing:border-box;}
+		/*.content #btnLogin{margin-left:21%;}*/
+		.content > div{padding:10px 0;}
+		.content > div > p{margin:5px 0 0 21%;}
+		.content .form-indent{padding-left:20%;}
+		.content .error{color:#f00;}
+		.content .success{display:inline-block;margin:0px;font-weight:bold;color:#5cb85c;}
+		.welcome strong{padding:0 5px;color:#5cb85c;}
+	</style>
+	<script>
+		document.addEventListener('DOMContentLoaded',()=>{
+			var btnOpen = document.querySelector('#btnOpen');
+			var welcome = document.querySelector('.welcome');
+
+			var pop = {
+				ele:document.querySelector('.popover'),
+				overlay:document.querySelector('.overlay'),
+				init(){
+					// 关闭弹窗
+					this.ele.onclick = e=>{
+						if(e.target.className === 'btn-close'){
+							this.close();
+						}
+					}
+
+					// ESC关闭
+					document.onkeyup = e=>{
+						if(e.keyCode === 27){
+							this.close();
+						}
+					}
+
+					// 可拖拽
+					this.draggable();
+
+
+					// 验证规则
+					let btnLogin = this.ele.querySelector('#btnLogin');
+					btnLogin.onclick = ()=>{
+		                var _username = username.value;
+		                var _psw = password.value;
+
+		                tips_username = username.nextElementSibling;
+		                if(!tips_username){
+	                		tips_username = document.createElement('p');
+	                		username.parentNode.appendChild(tips_username);
+	                	}
+
+		                tips_password = password.nextElementSibling;
+		                if(!tips_password){
+	                		tips_password = document.createElement('p');
+	                		password.parentNode.appendChild(tips_password);
+	                	}
+
+		                if(!/^[a-z][a-z\d]{5,11}$/i.test(_username)){
+		                	tips_username.className = 'error';
+		                	tips_username.innerHTML = '用户名不合法';
+
+		                    username.focus();
+		                    return false;
+		                }else{
+		                	tips_username.className = 'success';
+		                	tips_username.innerHTML = '&radic;';
+		                }
+
+		                if(!/^[^\s]{6,18}$/.test(_psw)){
+		                	tips_password.className = 'error';
+		                	tips_password.innerHTML = '密码不合法';
+		                    password.focus();
+		                    return false;
+		                }else{
+		                	tips_password.className = 'success';
+		                	tips_password.innerHTML = '&radic;';
+		                }
+
+		                this.login(_username);
+		            }
+
+		            // 协议按钮
+		            let btnAgree = this.ele.querySelector('#btnAgree');
+		            btnAgree.onclick = ()=>{
+		            	btnLogin.disabled = !btnAgree.checked;
+		            }
+
+					return this;
+				},
+				open(){
+					this.ele.style.display = 'block';
+					this.overlay.style.display = 'block';
+
+					return this;
+				},
+				close(){
+					this.ele.style.display = 'none';
+					this.overlay.style.display = 'none';
+
+					return this;
+				},
+				login(username){
+					this.close();
+
+	                // 欢迎信息
+	                welcome.innerHTML = `你好<strong>${username}</strong>，欢迎来到国家信息安全系统，<a href="#" class="btnLogout">退出</a>`;
+				},
+				logout(){
+					location.reload();
+				},
+				pos(pos='center'){
+					let {left,top} = pos;
+
+					if(pos==='center'){
+						left = (window.innerWidth-this.ele.offsetWidth)/2;
+						top = (window.innerHeight-this.ele.offsetHeight)/2;
+					}
+
+					this.ele.style.left = left + 'px';
+					this.ele.style.top = top + 'px';
+
+					return this;
+				},
+				draggable(){
+					let title = this.ele.querySelector('h4');
+
+					title.onmousedown = e=>{
+						let owidth = e.clientX - this.ele.offsetLeft;
+						let oHeight = e.clientY - this.ele.offsetTop;
+
+						title.style.cursor = 'move';
+
+						document.onmousemove = evt=>{
+							this.pos({
+								left:evt.clientX-owidth,
+								top:evt.clientY-oHeight
+							});
+
+							evt.preventDefault;
+						}
+						e.preventDefault();
+					}
+
+					document.onmouseup = e=>{
+						document.onmousemove = null;
+						title.style.cursor = 'default';
+					}
+				}
+			}
+
+			pop.init().close();
+
+			// 打开弹窗
+			welcome.onclick = e=>{
+				if(e.target.className === 'btnOpen'){
+					pop.open().pos();
+				}else if(e.target.className === 'btnLogout'){
+					pop.logout();
+				}
+				
+				e.preventDefault();
+			}
+
+			// 自适应
+			window.onresize = ()=>{
+				pop.pos();
+			}
+		});
+	</script>
+</head>
+<body>
+	<div class="explain">
+		<h1>弹窗登录效果（30分）</h1>
+        <h4>要求：</h4>
+        <ol>
+            <li>点击页面上登录按钮，弹出登录框，并带半透明遮罩层</li>
+            <li>弹窗页面居中显示，并自适应浏览器窗口大小</li>
+            <li>弹窗标题具有拖拽效果</li>
+            <li>右上角按钮可关闭弹窗，ESC键关闭弹窗</li>
+            <li>登录验证
+                <ul>
+                    <li>账号
+						<ul>
+							<li>必须是数字和字母组成</li>
+							<li>第一个字符只能为字母</li>
+							<li>长度 6~12 位</li>
+						</ul>
+                    </li>
+                    <li>密码
+						<ul>
+							<li>必须是非空白字符组成</li>
+							<li>长度 6~18位</li>
+						</ul>
+                    </li>
+                    <li>验证不通过底部显示错误信息，且输入框获得焦点</li>
+                    <li>不同意协议，登录按钮不可用</li>
+                    <li>登录成功显示登录用户信息，并有退出功能</li>
+                </ul>
+            </li>
+        </ol>
+    </div>
+
+	<div class="popover">
+		<h4>注册登录</h4>
+		<div class="content">
+			<div class="form-group">
+				<label for="username">用户名：</label>
+				<input type="text" id="username" name="username">
+			</div>
+			<div class="form-group">
+				<label for="password">密码：</label>
+				<input type="password" id="password" name="password">
+			</div>
+			<div class="form-indent">
+				<label><input type="checkbox" id="btnAgree">同意<a href="#">保密协议</a></label>
+			</div>
+			<div class="form-indent">
+				<button id="btnLogin" disabled>登录</button>
+			</div>
+		</div>
+		<span class="btn-close">&times;</span>
+	</div>
+	<div class="overlay"></div>
+	<div class="welcome">
+		你好，欢迎来到国家信息安全系统，请先<a href="#" class="btnOpen">登录</a>
+	</div>
+	
+</body>
+</html>

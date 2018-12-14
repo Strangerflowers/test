@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <script type="text/javascript">
+        window.onload=function(){
+
+
+       
+        // var str=['a','b','c','d','e'];
+        // var arr=[];
+        // for(var i=str.length;i>0;i++){
+        //     arr.push(str[i]);
+        // }
+        // console.log(arr);
+        var newObj={};
+        var obj={name:"王根吉",nickname:"小王",gender:"男",age:18};
+        for(var key in obj){
+            newObj[key]=obj[key];
+        }
+        console.log(newObj);
+
+        var obj1=Object.assign({},obj);
+        console.log(obj1);
+
+        var obj2=JSON.parse(JSON.stringify(obj));
+        console.log(obj2);
+
+        
+        var box=document.getElementsByClassName('box')[0];
+        box.style.fontSize='40px';
+         }
+        </script>
+    </head>
+    <body>
+        <h2 class="box">哈哈</h2>
+    </body>
+</html>

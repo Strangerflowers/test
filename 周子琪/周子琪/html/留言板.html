@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <style type="text/css">
+            ul{list-style: none;padding:0;margin:0;}
+            .msg-list{position:relative;width:700px;margin:0 auto;}
+            .msg-list ul{padding:10px;min-height:200px;max-height:400px;overflow-y:auto;border:1px solid #ddd;}
+            .msg-list li{float:left;width:700px;clear:both;margin:10px 0;padding:5px;line-height:2;border-bottom:1px dotted #222;}
+            .msg-list textarea{display:block;min-height:50px;margin:10px 0;width:100%;box-sizing: border-box;}
+            .date{float:right;}
+            .txt{float:left;}
+        </style>
+        <script type="text/javascript">
+            window.onload=function(){
+                var box = document.getElementById('box');
+                var msglist = box.children[0];
+                var msg = box.children[1];
+                var btn = box.children[2];
+                document.onkeydown=function(e){
+                    e=e||window.event;
+                    if(e.ctrlKey && e.keyCode==13){
+                        send();
+                    }
+                }
+                btn.onclick=send;
+                 function send(){
+                    var _msg=msg.value;
+                    var li=document.createElement('li');
+                    
+                    var fl=document.createElement('span');
+                    fl.className='txt';
+                    fl.innerText=_msg;
+                    li.appendChild(fl);
+                    if(_msg.length>=20){
+                    _msg=_msg.split('').splice(20,1,'');
+            
+            }
+                    msglist.appendChild(li);
+                    var fr= document.createElement('span');
+                    fr.className='date';
+                    var date = new Date();
+                    var year = date.getFullYear();
+                    var month = date.getMonth()+1;
+                    var d = date.getDate();
+
+                    var hour = date.getHours();
+                    var min = date.getMinutes();
+                    var sec = date.getSeconds();
+                    fr.innerText=year + '-' + month + '-' + d + ' ' + hour + ':' + min + ':' + sec;
+                    li.appendChild(fr);
+                    msglist.appendChild(li);
+
+
+                    msg.value='';
+                    msg.focus();
+                }
+            }
+        </script>
+    </head>
+    <body>
+        <div id="box" class="msg-list">
+            <ul>
+                
+            </ul>
+            <textarea ></textarea>
+            <button>提交</button>
+        </div>
+    </body>
+</html>

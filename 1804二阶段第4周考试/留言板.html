@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>留言板</title>
+    <link rel="stylesheet" href="css/common.css">
+    <style>
+        <style>
+        ul{list-style: none;padding:0;margin:0;}
+        .msg-list{}
+        .msg-list ul{padding:10px;min-height:200px;overflow:hidden;border:1px solid #ddd;}
+        .msg-list li{position:relative;margin:10px 0;padding:5px;line-height:2;border-bottom:1px dotted #ddd;}
+        .msg-list li time{position:absolute;right:0;top:0;color:#999;}
+        .msg-list li.active{float:right;background-color:#fc0;color:#fff;}
+        .msg-list textarea{display:block;min-height:50px;margin:10px 0;width:100%;box-sizing: border-box;}
+        .qty{text-align:right;}
+        .qty span:first-child{color:#f00;}
+        .content{line-height:2;}
+    </style>
+    </style>
+    <script>
+        document.addEventListener('DOMContentLoaded',()=>{
+            var container = document.querySelector('#container');
+            var btnSend = container.querySelector('button');
+            var msgList = container.querySelector('ul');
+            var msg = container.querySelector('textarea');
+            var qty = container.querySelector('.qty');
+
+            var total = 20;
+
+            qty.children[1].innerText = total;
+            qty.children[0].innerText = msg.value.length;
+
+            btnSend.onclick = function(){
+                send();
+            }
+
+            msg.onkeyup = function(e){
+                console.log(e.keyCode);
+                if(e.ctrlKey && e.keyCode == 13){
+                    send();
+                }
+            }
+            msg.oninput = function(e){
+                var _msg = msg.value;
+                var len = _msg.length;
+                if(len>total){
+                    msg.value = _msg.slice(0,total)
+                    e.preventDefault();
+                    return;
+                }
+                qty.children[0].innerText = len;
+            }
+
+            function send(){
+                var _msg = msg.value.trim();
+                var li = document.createElement('li');
+                var now = new Date();
+                var date = now.toLocaleDateString().replace(/\//g,'-');
+                var time = now.toLocaleTimeString().substring(2);
+
+                li.innerHTML = _msg + '<time>' + date + ' ' + time + '</time>';
+
+                msgList.appendChild(li);
+                msg.value = '';
+                msg.focus();
+                qty.children[0].innerText = msg.value.length;
+            }
+        });
+    </script>
+</head>
+
+<body>
+     <div class="explain">
+        <h1>留言板</h1>
+        <h4>要求：</h4>
+        <ol>
+            <li>点击提交按钮，发送消息</li>
+            <li>ctrl+回车发送消息</li>
+            <li>列表中每条消息显示发送时的时间，格式：2017-3-15 10:50:23</li>
+            <li>实时显示可输入字符数</li>
+            <li>字符数量到最大值后不可继续输入</li>
+        </ol>
+    </div>
+
+    <div id="container" class="msg-list">
+        <ul>
+        </ul>
+        <textarea></textarea><div class="qty"><span>10</span>/<span>50</span></div>
+        <button>提交</button>
+    </div>
+
+</body>
+
+</html>

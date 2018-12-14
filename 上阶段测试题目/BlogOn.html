@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>微博点赞</title>
+    <style>
+        #content{
+            margin: 0 auto;
+            width: 950px;
+            font-size: 15px;
+            padding: 0 8px;
+            box-sizing: border-box;
+            box-shadow:inset 0px 13px 10px #CDCDCD;
+            border-top: 1px dotted #ccc;
+        }
+        ul{margin: 0;padding: 0;list-style: none;}
+        ul li{overflow: hidden;height:53px;line-height: 53px; border-bottom: 1px dotted #ccc;}
+        .fl{float:left;}
+        .fr{float: right;}
+        #paper{
+            padding-top: 39px;
+            height: 126px;
+            box-sizing: border-box;
+            position: relative;
+            border-bottom: 1px solid #ccc;
+            margin-bottom: 9px;
+        }
+        #paper div{
+            font-size: 13px;
+        }
+        #paper .author{
+            padding-right: 11px;
+        }
+        #disinfo{
+            width: 65px;
+            height: 47px;
+            position: absolute;
+            right: 8px;
+            top: 30px;
+            display:flex;
+            justify-content: space-between;
+        }
+        .like,.com{
+            width: 30px;
+            height: 47px;
+            background: #58BC58;
+            /*box-sizing: border-box;*/
+            /*padding:7px 7px;*/
+            color:white;
+            display:flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;;
+        }
+        .like img,.com img{
+            width: 16px;
+            height: 16px;
+        }
+        /*小图用背景的做法*/
+         /*.like{
+            padding-top: 22px;
+            background: #58bc58 url(icon/zan.svg) no-repeat;
+            background-size: 16px 16px;
+            background-position: 6px 7px;
+        }
+        .com{
+            padding-top: 22px;
+            background:#58bc58 url(icon/com.svg) no-repeat;
+            background-size: 16px 16px;
+            background-position: 6px 7px;
+
+        }*/
+        .time{
+            color:#B39999;
+        }
+        #reply{
+            width:934px;
+            height:84px;
+            margin-top: 30px;
+            display:none;
+        }
+        #box{
+            width:934px;
+            height:84px;
+        }
+        #reply textarea{
+            display:block;
+            width:934px;
+            height:50px;
+            padding:0;
+            box-sizing: border-box;
+            border: 1px solid #7B9CD3;
+            margin-bottom: 10px;
+        }
+        #reply button{
+            padding:0;
+            width: 43px;
+            height: 23px;
+            border:1px solid #979797;
+            background:#F2F2F2;
+        }
+    </style>
+    <script>
+        window.onload = function () { 
+            var obj ={
+                    "name": "laoxie",
+                    "content": "说说最让人热血沸腾的一句话，我先来：不逼自己一把，你永远都不知道自己有多优秀",
+                    "time": "2017-11-11",
+                    "zan": 1,
+                    "comment": [
+                    {
+                        "name": "lemon",
+                        "con": "你可以上二流的大学，但不能过二流的人生",
+                        "time": "2017-12-5"
+                    },
+                    {
+                        "name": "小红",
+                        "con": "今晚我就回去逼下自己",
+                        "time": "2017-12-6"
+                    },
+                    {
+                        "name": "小吴",
+                        "con": "你不能拼爹，所以自能拼命",
+                        "time": "2017-12-7"
+                    }]
+                };
+            //页面加载获取cookie
+            var myblog = getCookie('myblog');
+            //cookie存在则修改当前obj的评论和点赞数
+            if (myblog) {
+                obj.comment=JSON.parse(myblog).comment;
+                obj.zan = JSON.parse(myblog).zan;
+            }
+            renderPaper(obj);
+            renderComment(obj);
+            renderFixed();
+            /**
+             * [renderFixed 渲染文章]
+             * @param  {[object]} myobj [微博对象]
+             * @return {[type]}       [description]
+             */
+            function renderPaper(myobj){
+                var paperstr  ='<div>'
+                                    +'<strong class="author">'+myobj.name+'</strong>'
+                                    +'<span class="time">'+myobj.time+'</span>'
+                                +'</div>'
+                                +'<div class="title">'+myobj.content+'</div>'
+                                +'<div id="disinfo">'
+                                +'<span class="like fl"><img src="icon/zan.svg" id="zan"/><span class="zannum">'+myobj.zan+'</span></span>'
+                                    +'<span class="com fr"><img src="icon/com.svg" id="com"/><span class="comnum">'+myobj.comment.length+'</span></span>'
+                                +'</div>';
+                var paper = document.getElementById('paper');
+                paper.innerHTML = paperstr;
+            }
+
+            /**
+             * [renderComment 渲染评论]
+             * @param  {[Object]} myobj [微博对象]
+             * @return {[undefined]}     [undefined]
+             */
+            function renderComment(myobj){
+                var commentstr = myobj.comment.map(function (item) { 
+                        return '<li>'
+                                    +'<div class="fl">'
+                                        +'<span>'+item.name+'&nbsp;:&nbsp;</span><span>'+item.con+'</span>'
+                                    +'</div>'
+                                    +'<span class="time fr">'+item.time+'<span>'
+                                +'</li>'
+                 }).join('');
+                var comment = document.getElementById('comment');
+                comment.innerHTML = commentstr;
+            }
+
+            function renderFixed(){
+                var boxstr ='<div id="box"><div id="reply">'
+                            +'<textarea name="rpcontent" id="rpcontent"></textarea>'
+                            +'<button id="submit">提交</button>'
+                            +'</div></div>';
+                var box = document.getElementById('box');
+                box.innerHTML = boxstr;
+            }
+
+            content.onclick = function(e){
+                //委托必须给页面上已存在的
+                e = e || window.event;
+                var target = e.target || e.srcElement;
+                //点赞
+                if (target.id == 'zan') {
+                        obj.zan++;
+                        target.parentNode.getElementsByClassName('zannum')[0].innerText = obj.zan;
+                        write('',7);
+                }
+                //提交
+                if(target.id == 'submit'){
+                        write('冠希',7);
+                        modifyPaperNum();
+                }
+                //点击评论
+                if (target.id =='com') {
+                    var reply = document.getElementById('reply');
+                    reply.style.display = 'block';
+                }
+                
+            }
+            //ctrl+enter 提交
+            document.onkeydown = function(e){
+                e = e || window.event;
+                var keycode = e.keyCode || e.which;
+                if (e.ctrlKey) {
+                    if (keycode===13) {
+                        write('思聪',7);
+                        modifyPaperNum();
+                    }
+                }
+            }
+            /**
+             * [modifyPaperNum 修改评论数]
+             * @return {[type]} [description]
+             */
+            function modifyPaperNum(){
+                var com = document.getElementById('disinfo').getElementsByClassName('comnum')[0];
+                com.innerText = obj.comment.length;
+            }
+            /**
+             * [write 写入列表]
+             * @param  {[string]} author [作者]
+             * @return {[undefined]}        [null]
+             */
+            function write(author,day){
+                var rpcontent = document.getElementById('rpcontent');
+                var text = rpcontent.value.trim();
+                var date = new Date();
+                //author为空字符串不渲染评论,只是更新cookie的点赞数
+                if(author){
+                    if (text) {
+                        var mydata = {}
+                        mydata.name = author;
+                        mydata.con = text;
+                        mydata.time = ''+date.getFullYear()+'-'+(date.getMonth()+1)+'-'+(date.getDate()+1)
+                                        +' '+date.getHours()+':'+date.getMinutes()+':'+date.getSeconds();
+                        obj.comment.push(mydata);
+                        renderComment(obj);
+                    }
+                }
+                
+                var myblog = JSON.stringify(obj);
+                var mycookie ={};
+                mycookie.expires = date.setDate(date.getDate()+day);
+                setCookie('myblog',myblog,mycookie);
+            }
+            /**
+             * [setCookie 设置cookie]
+             * @param {[string]} name  [cookieName]
+             * @param {[string]} value [cookieValue]
+             * @param {[object]} obj   [cookieParams]
+             */
+            function setCookie(name,value,myobj){
+                var cookie = name+'='+value;
+                myobj = myobj || {};
+                if (myobj.expires) {
+                    cookie +=';expires='+myobj.expires;
+                }
+                if (myobj.path) {
+                    cookie +=';path='+myobj.path;
+                }
+                if (myobj.domain) {
+                    cookie +=';domain='+myobj.domain;
+                }
+                if(myobj.secure){
+                    cookie +=';secure='+myobj.secure;
+                }
+                document.cookie = cookie; 
+            }
+            function getCookie(name){
+                var cookies = document.cookie;
+                var ck='';
+                cookies = cookies.split('; ');
+                for(var i = 0,j = cookies.length;i<j;i++){
+                    var arr = cookies[i].split('=');
+                    if (arr[0]==name) {
+                        ck = arr[1];
+                    }
+                }
+                return ck;
+            }
+         }
+
+    </script>
+</head>
+<body>
+    <div id="content">
+        <div id="paper"></div>
+        <ul id="comment"></ul>
+        <div id="box"></div>
+    </div>
+</body>
+</html>

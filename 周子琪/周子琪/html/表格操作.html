@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>生成表格</title>
+    <style>
+    table { border-collapse: collapse;}
+
+    thead tr {height: 41px; background: #EEEEEE;line-height: 41px; }
+
+    tbody tr {  height: 41px;line-height: 41px;}
+
+    tbody tr:nth-child(2n-1) { background: white;}
+
+    tbody tr:nth-child(2n) { background: #F5F5F5;}
+
+    td { width: 89px; border: 1px solid #ccc;padding-left: 10px;
+    }
+
+    td:last-child {width: 55px;}
+
+    td:first-child {  width: 40px; width: 40px; padding-left: 0px; text-align: center;
+    }
+
+    td:nth-child(2) {  width: 31px;  padding-left: 0px;  text-align: center;}
+
+    .hobby { width: 268px;}
+
+    .cz { width: 55px;}
+
+    tbody tr.gl {background: pink; }
+    </style>
+    <script>
+    window.onload = function() {
+        var data = [
+            { name: "刘备", nickname: "小刘", age: 58, gender: "男", hobby: ["撩妹", "装逼", "编草鞋"] },
+            { name: "关羽", nickname: "关二", age: 47, gender: "男", hobby: ["耍大刀", "变脸", "喝酒"] },
+            { name: "张飞", nickname: "张三", age: 45, gender: "男", hobby: ["打架", "喝酒", "耍流氓"] },
+            { name: "赵云", nickname: "赵四", age: 22, gender: "男", hobby: ["打架", "喝酒", "耍帅"] },
+            { name: "貂蝉", nickname: "美女", age: 20, gender: "女", hobby: ["撩汉", "化妆"] },
+            { name: "小乔", nickname: "乔二", age: 18, gender: "女", hobby: ["弹琴", "唱歌", "撩周瑜"] }
+        ];
+        var mytable = document.getElementById('mytable');
+        var mytbody = document.createElement('tbody');
+        for (var i = 0; i < data.length; i++) {
+            var tr = mytbody.insertRow(i);
+            var j = 0;
+            for (var key in data[i]) {
+                var td = tr.insertCell(j);
+                td.innerText = data[i][key];
+                j++
+            }
+            var tdcz = tr.insertCell(j);
+            tdcz.innerHTML = '<button class="del">X</button>'
+            var tdxh = tr.insertCell(0);
+            tdxh.innerText = i + 1;
+            var tdcbox = tr.insertCell(0);
+            tdcbox.innerHTML = '<input class="one" type="checkbox">';
+        }
+        mytable.appendChild(mytbody);
+
+        var onall = mytable.getElementsByClassName('all')[0];
+
+        onall.addEventListener('click', function(e) {
+            var item = document.getElementsByClassName('one');
+            for (var i = item.length - 1; i >= 0; i--) {
+                item[i].checked = this.checked ? true : false;
+                item[i].parentNode.parentNode.className = this.checked ? 'gl' : '';
+            }
+        });
+
+        mytable.addEventListener('click', function(e) {
+            e = e || window.event;
+            var target = e.target || e.srcElement;
+            if (target.className == 'del') {
+                var tr = target.parentNode.parentNode;
+                var mybody = tr.parentNode;
+                mybody.removeChild(tr);
+                for (var i = 0; i < mybody.childNodes.length; i++) {
+                    mybody.childNodes[i].childNodes[1].innerText = i + 1;
+                }
+            }
+            if (target.nodeName.toLocaleLowerCase() === 'td') {
+                var parent = target.parentNode;
+                var b = parent.className.indexOf('gl') >= 0
+                parent.className = b ? '' : 'gl';
+                parent.firstChild.firstChild.checked = b ? false : true;
+            }
+        });
+    }
+    </script>
+</head>
+
+<body>
+    <div id="box">
+        <table id="mytable">
+            <thead>
+                <tr>
+                    <td class="xz">
+                        <input class="all" type="checkbox">
+                    </td>
+                    <td class="num">#</td>
+                    <td class="name">姓名</td>
+                    <td class="nickname">昵称</td>
+                    <td class="age">年龄</td>
+                    <td class="gender">性别</td>
+                    <td class="hobby">爱好</td>
+                    <td class="contr">操作</td>
+                </tr>
+            </thead>
+        </table>
+    </div>
+</body>
+
+</html>
+
+
+
+
+

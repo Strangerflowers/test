@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>tab标签切换</title>
+	<style>
+	#tab span{display:inline-block;padding:5px 15px;background-color:#ddd;margin:0 5px;border:1px solid #ddd;border-bottom:none;}
+	#tab span.active,.tab-content.active{background-color:#fd5;border-color:#fd5;}
+	.tab-content{padding:15px;width:500px;min-height:200px;border:1px solid #ddd;background-color:#efefef;}
+	</style>
+	<script>
+	window.onload = function(){
+		/*
+			tab标签切换
+		 */
+		var tab = document.getElementById('tab');
+		var spans = tab.getElementsByTagName('span');
+		var content = document.getElementsByClassName('tab-content');
+
+		// 先隐藏除第一个以外的.content
+		for(var i=1;i<content.length;i++){
+			content[i].style.display = 'none';
+		}
+
+		// 给第一个加高亮
+		spans[0].className = 'active';
+		content[0].className = 'tab-content active'
+
+		// 给span标签绑定点击事件
+		// 点击时，显示对应的.content
+		for(var i=0;i<spans.length;i++){
+			// 把i值赋值给每个按钮的属性
+			spans[i].index = i;
+			spans[i].onmouseover = function(){
+				// for循环隐藏所有.content
+				for(var i=0;i<content.length;i++){console.log(i)
+					content[i].style.display = 'none';
+					content[i].className = 'tab-content';
+
+					// 把所有span背景颜色改成灰色
+					spans[i].className = '';
+
+				}
+
+				// 显示相应.content
+				content[this.index].style.display = 'block';
+				content[this.index].className = 'tab-content active';
+
+				// 高亮显示当前tab标签
+				spans[this.index].className = 'active';
+
+
+			}
+		}
+		
+		
+	}
+		
+	</script>
+</head>
+<body>
+	<h1>tab标签切换</h1>
+	<div id="tab"><span>laoxie</span><span>lemon</span><span>lettle tiantian</span><span>xiaoxie</span></div>
+	<div class="tab-content">大家好,我叫laoxie,今年18,热爱大保健</div>
+	<div class="tab-content">大家好,我叫lemon,人称儿歌王,别看我32,我想为你生猴子</div>
+	<div class="tab-content">大家好,我叫tiantian,我还小,所以叫lettle tiantian,欢迎与大家交朋友</div>
+	<div class="tab-content">大叫好,我叫xiaoxie,多年后我也会称为laoxie,我为laoxie代言</div>
+
+	<div class="content">
+        <h4>要求：</h4>
+        <ol>
+            <li>默认第一个高亮显示</li>
+            <li>鼠标滑入时显示相应tab内容</li>
+        </ol>
+    </div>
+</body>
+</html>

@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>表格选择</title>
+    <link rel="stylesheet" href="css/common.css">
+    <style>
+        .datalist{width:800px;}
+        table{width:100%;border:1px solid #ddd;border-collapse: collapse;}
+        td,th{border:1px solid #ddd;padding:10px;}
+        thead{background-color: #eee;}
+        thead th{text-align:left;}
+
+        tbody tr:nth-child(even){background-color: #f5f5f5;}
+
+        tbody tr.selected{background-color: #ffc;}
+
+        .content{line-height:2;}
+    </style>
+    <script>
+        document.addEventListener('DOMContentLoaded',function(){
+            let datalist = document.querySelector('.datalist');
+            let table = datalist.querySelector('table');
+            let tbody = table.tBodies[0];
+
+            let data = [
+                {name:'刘备',nickname:'小刘',age:58,gender:'男',hobby:['撩妹','装逼','编草鞋']},
+                {name:'关羽',nickname:'关二',age:47,gender:'男',hobby:['耍大刀','变脸','喝酒']},
+                {name:'张飞',nickname:'张三',age:45,gender:'男',hobby:['打架','喝酒','耍流氓']},
+                {name:'赵云',nickname:'赵四',age:22,gender:'男',hobby:['打架','喝酒','耍帅']},
+                {name:'貂蝉',nickname:'美女',age:20,gender:'女',hobby:['撩汉','化妆']},
+                {name:'小乔',nickname:'乔二',age:18,gender:'女',hobby:['弹琴','唱歌','撩周瑜']}
+            ]
+
+
+
+            showTable();
+
+            // 全选
+            let btnAll = document.querySelector('#all');
+            let checkboxs = tbody.querySelectorAll('input[type=checkbox]');
+            let trs = tbody.children;
+            btnAll.onclick = function(){
+                for(let i=0;i<checkboxs.length;i++){
+                    checkboxs[i].checked = this.checked;
+                    trs[i].classList[this.checked?'add':'remove']('selected');
+                }
+            }
+
+
+            // 勾选选中
+            tbody.onclick = function(e){
+                let target = e.target;
+                let tagName = target.tagName.toLowerCase();
+                if(tagName === 'input'){
+                    let currentTr = target.parentNode.parentNode;
+                    currentTr.classList[target.checked?'add':'remove']('selected');
+                    checkAllStatus();
+                }else if(tagName === 'td'){
+                    let currentTr = target.parentNode;
+                    let currentCheckbox = currentTr.querySelector('input[type=checkbox]');
+                    currentCheckbox.checked = !currentCheckbox.checked;
+                    currentTr.classList[currentCheckbox.checked?'add':'remove']('selected');
+                    checkAllStatus();
+                }
+
+                // 删除
+                else if(target.className === 'del'){
+                    let currentTr = target.parentNode.parentNode;
+                    // currentTr.parentNode.removeChild(currentTr);
+                    let idx = currentTr.sectionRowIndex;
+                    data.splice(idx,1);
+                    showTable();
+                }
+
+            }
+
+            
+
+
+            function checkAllStatus(){
+                for(var i=0;i<checkboxs.length;i++){
+                    // 只要有一个没选中，直接跳出循环
+                    if(!checkboxs[i].checked){
+                        break;
+                    }
+                }
+
+                // 只要i的值等于复选框的个数
+                // 说明所有复选框都是选中状态
+                all.checked = i === checkboxs.length;
+            }
+
+
+            // 生成表格
+            function showTable(){
+                tbody.innerHTML = '';
+                for(let i=0;i<data.length;i++){
+                    let tr = tbody.insertRow(i);
+
+                    let j = 0;
+                    for(let attr in data[i]){
+                        let td = tr.insertCell(j);
+                        td.innerText = data[i][attr];
+                        j++;
+                    }
+
+                    // 添加行号
+                    tr.insertCell(0).innerText = i+1;
+
+                    // 添加复选框
+                    let checkTd = tr.insertCell(0);
+                    let checkbox = document.createElement('input');
+                    checkbox.type = 'checkbox';
+                    checkbox.name = 'cb';
+                    checkTd.appendChild(checkbox);
+
+                    // 添加删除按钮
+                    let delTd = tr.insertCell(tr.cells.length);
+                    delTd.innerHTML = `<button class="del">&times;</button>`;
+                }
+            }
+
+        });
+    </script>
+</head>
+<body>
+    <div class="explain">
+        <h1>表格操作（20分）</h1>
+        <h4>要求：</h4>
+        <ol>
+            <li>根据数据生成表格</li>
+            <li>全选/不选</li>
+            <li>点击任意单元格选中当前行并勾选复选框</li>
+            <li>选中时表格行高亮</li>
+            <li>删除表格行，自动更新行号</li>
+        </ol>
+    </div>
+    <div class="datalist">
+        <table>
+            <thead>
+                <tr>
+                    <th width="1%"><input type="checkbox" name="all" id="all"></th>
+                    <th width="2%">#</th>
+                    <th>姓名</th>
+                    <th>昵称</th>
+                    <th>年龄</th>
+                    <th>性别</th>
+                    <th>爱好</th>
+                    <th width="7%">操作</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+        
+</body>
+</html>

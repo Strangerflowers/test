@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>购物流程</title>
+	<link rel="stylesheet" href="css/common.css">
+	<style>
+		ul{list-style: none;}
+		.goodslist ul{overflow:hidden;}
+		.goodslist li{float:left;width:220px;height:400px;border-right:1px dotted #ddd;padding-right:20px;margin:20px;}
+		.goodslist li img{width:100%;}
+		.goodslist li p{margin:10px 0;}
+		.price span{color:#f00;}
+		.price span::before,.price del::before{content:'￥';}
+
+		.toolbar a{display:inline-block;margin:0 10px;text-decoration: none;}
+		.toolbar a:hover{text-decoration: underline;color:#f00;}
+		.toolbar a.asc{font-weight:bold;color:#58bc58;}
+	</style>
+	<script src="js/common.js"></script>
+	<script>
+		/*
+			购物流程
+		 */
+		document.addEventListener('DOMContentLoaded',function(){
+			// 加载说明
+			let explain = document.querySelector('.explain-right');
+			let xhr = new XMLHttpRequest();
+			xhr.onload = function(e){
+				console.log(xhr.responseText);
+				explain.innerHTML = xhr.responseText;
+
+			}
+			xhr.open('get','explain.html?v='+Date.now(),true);
+			xhr.send();
+
+			let data = [{
+		        "id":"G001",
+		        "title":"Thermos 膳魔师 Funtainer系列水杯 12盎司（340g） 粉红色",
+		        "category":"shirt",
+		        "imgurl":"img/161.jpg",
+		        "price":899,
+		        "off":398,
+		        "star":4,
+		        "hot":124
+		    },
+		    {
+		        "id":"G002",
+		        "title":"Thermos 膳魔师 Funtainer系列水杯 12盎司（340g） 粉红色",
+		        "category":"shoes",
+		        "imgurl":"img/162.jpg",
+		        "price":698,
+		        "off":599,
+		        "star":5,
+		        "hot":666
+		    },
+		    {
+		        "id":"G003",
+		        "title":"Thermos 膳魔师 Funtainer系列水杯 12盎司（340g） 粉红色",
+		        "category":"手提包",
+		        "imgurl":"img/163.jpg",
+		        "price":398,
+		        "off":199,
+		        "star":5,
+		        "hot":9502
+		    },
+		    {
+		        "id":"G004",
+		        "title":"Thermos 膳魔师 Funtainer系列水杯 12盎司（340g） 粉红色",
+		        "category":"帽子",
+		        "imgurl":"img/164.jpg",
+		        "price":998,
+		        "off":600,
+		        "star":3,
+		        "hot":10002
+		    },
+		    {
+		        "id":"G005",
+		        "title":"Thermos 膳魔师 Funtainer系列水杯 12盎司（340g） 粉红色",
+		        "category":"shoes",
+		        "imgurl":"img/165.jpg",
+		        "price":198,
+		        "off":99,
+		        "star":4,
+		        "hot":386
+		    },
+		    {
+		        "id":"G006",
+		        "title":"Thermos 膳魔师 Funtainer系列水杯 12盎司（340g） 粉红色",
+		        "category":"shirt",
+		        "imgurl":"img/166.jpg",
+		        "price":6998,
+		        "off":5999,
+		        "star":2,
+		        "hot":999
+		    },
+		    {
+		        "id":"G007",
+		        "title":"Thermos 膳魔师 Funtainer系列水杯 12盎司（340g） 粉红色",
+		        "category":"shirt",
+		        "imgurl":"img/167.jpg",
+		        "price":1899,
+		        "off":3298,
+		        "star":4,
+		        "hot":1024
+		    },
+		    {
+		        "id":"G008",
+		        "title":"Thermos 膳魔师 Funtainer系列水杯 12盎司（340g） 粉红色",
+		        "category":"shoes",
+		        "imgurl":"img/168.jpg",
+		        "price":698,
+		        "off":1599,
+		        "star":3,
+		        "hot":662
+		    },
+		    {
+		        "id":"G009",
+		        "title":"Thermos 膳魔师 Funtainer系列水杯 12盎司（340g） 粉红色",
+		        "category":"手提包",
+		        "imgurl":"img/169.jpg",
+		        "price":398,
+		        "off":1099,
+		        "star":4,
+		        "hot":91502
+		    },
+		    {
+		        "id":"G0010",
+		        "title":"Thermos 膳魔师 Funtainer系列水杯 12盎司（340g） 粉红色",
+		        "category":"帽子",
+		        "imgurl":"img/160.jpg",
+		        "price":998,
+		        "off":2600,
+		        "star":1,
+		        "hot":13002
+		    }];
+
+
+		    let goodslist = document.querySelector('.goodslist');
+		    let toolbar = document.querySelector('.toolbar');
+
+		    render();
+
+
+		    // 排序
+		    toolbar.onclick = function(e){
+		    	if(e.target.tagName === 'A'){
+		    		
+
+		    		// 获取排序分类
+		    		let type = e.target.className.replace('sort_','');
+
+
+		    		if(e.target.classList.contains('asc')){
+
+		    			data.reverse();
+
+			    		
+		    		}else{
+		    			data.sort((a,b)=>{
+			    			return a[type] - b[type];
+			    		});
+		    		}
+
+		    		// 删除所有a标签的asc类
+		    		for(let link of toolbar.children){
+		    			if(link === e.target){
+			    			e.target.classList.add('asc');
+		    			}else{
+		    				link.classList.remove('asc');
+		    			}
+		    		}
+
+		    	}
+
+
+		    	render();
+		    }
+
+		    // 浏览商品
+		    goodslist.onclick = function(e){
+		    	if(e.target.tagName === 'IMG' || e.target.tagName === 'H4'){
+		    		let currentLi = e.target.parentNode;
+		    		let guid = currentLi.dataset.guid;
+
+		    		let goods = data.filter(item=>{
+		    			return item.id === guid;
+		    		})[0];
+
+		    		// 写入cookie
+		    		Cookie.set('goods',JSON.stringify(goods));
+
+		    		location.href = 'goods.html';
+		    	}
+		    }
+
+		    function render(){
+			    // 生成ul
+			    let ul = document.createElement('ul');
+
+			    ul.innerHTML = data.map(goods=>{
+			    	return `<li data-guid="${goods.id}">
+						<img src="${goods.imgurl}" />
+						<h4>${goods.title} ${goods.category}</h4>
+						<p class="price">原价：<del>${goods.price.toFixed(2)}</del></p>
+						<p class="price">现价：<span>${goods.off.toFixed(2)}</span></p>
+						<p>人气：${goods.hot}</p>
+			    	</li>`
+			    }).join('');
+
+
+			    goodslist.innerHTML = '';
+			    goodslist.appendChild(ul);
+		    	
+		    }
+		});
+	</script>
+</head>
+<body>
+	<div class="explain explain-right">
+		
+	</div>
+	<div class="container">
+		<div class="toolbar">
+			<a href="#" class="sort_price">价格排序</a>
+			<a href="#" class="sort_hot">人气排序</a>
+			<a href="#" class="sort_star">好评排序</a>
+		</div>
+		<div class="goodslist"></div>
+	</div>
+</body>
+</html>

@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Document</title>
+    <style type="text/css">
+    table{width: 100%;}
+    td{
+        border:1px solid #ccc;
+    }
+    th{
+         border:1px solid #ccc;
+    }
+    </style>
+</head>
+<body>
+<table id="tab">
+    <!-- <tr>
+        <th>#</th>
+        <th>商品ID</th>
+        <th>商品名称</th>
+        <th>分类</th>
+        <th>图片地址</th>
+        <th>价格</th>
+        <th>现价</th>
+        <th>星级评价</th>
+        <th>热度</th>
+        <th>操作</th>
+    </tr> -->
+</table>
+<div id="tangchuang">
+    
+</div>
+    <script type="text/javascript">
+    // (function(){
+var goods=[{
+        "id":"G001",
+        "title":"Thermos 膳魔师 Funtainer系列水杯 12盎司（340g） 粉红色",
+        "category":"shirt",
+        "imgurl":"images/g1.jpg",
+        "price":899,
+        "off":398,
+        "star":4,
+        "commentCount":124
+    },
+    {
+        "id":"G002",
+        "title":"Thermos 膳魔师 Funtainer系列水杯 12盎司（340g） 粉红色",
+        "category":"shoes",
+        "imgurl":"images/g2.jpg",
+        "price":698,
+        "off":599,
+        "star":4,
+        "commentCount":666
+    },
+    {
+        "id":"G003",
+        "title":"Thermos 膳魔师 Funtainer系列水杯 12盎司（340g） 粉红色",
+        "category":"手提包",
+        "imgurl":"images/g3.jpg",
+        "price":398,
+        "off":199,
+        "star":4,
+        "commentCount":9502
+    },
+    {
+        "id":"G004",
+        "title":"Thermos 膳魔师 Funtainer系列水杯 12盎司（340g） 粉红色",
+        "category":"帽子",
+        "imgurl":"images/g4.jpg",
+        "price":998,
+        "off":600,
+        "star":4,
+        "commentCount":10002
+    },
+    {
+        "id":"G005",
+        "title":"Thermos 膳魔师 Funtainer系列水杯 12盎司（340g） 粉红色",
+        "category":"shoes",
+        "imgurl":"images/g5.jpg",
+        "price":198,
+        "off":99,
+        "star":4,
+        "commentCount":386
+    },
+    {
+        "id":"G006",
+        "title":"Thermos 膳魔师 Funtainer系列水杯 12盎司（340g） 粉红色",
+        "category":"shirt",
+        "imgurl":"images/g6.jpg",
+        "price":6998,
+        "off":5999,
+        "star":4,
+        "commentCount":999
+    }];
+
+    var str=' #,商品ID,商品名称,分类,图片地址,价格,现价,星级评价,热度,操作'.split(',');
+    
+    var tab=document.getElementById('tab');
+        for(var i=0;i<goods.length;i++){
+            var tr=document.createElement('tr');
+            tab.appendChild(tr);
+       if(i%2==0){//隔行变色
+            tr.style.backgroundColor='#ccc';
+
+       }
+       if(i==0){
+            for(var n=0;n<str.length;n++){
+                var td=document.createElement('td');
+                tr.appendChild(td);
+                td.innerHTML=str[n]; 
+            }
+       }else{
+            //在前面加一个编号
+            var td=document.createElement('td');
+            tr.appendChild(td);
+            td.innerHTML=i;
+
+            for(var j in goods[i]){//遍历，把里面的属性遍历出来
+                if(i==0){
+                    var td=document.createElement('td');
+                    tr.appendChild(td);
+                    td.innerHTML=str[i];
+            
+                }
+                var td=document.createElement('td');
+                tr.appendChild(td);
+                td.innerHTML=goods[i][j];
+            } 
+       //在后面加入一个操作按钮
+       //   *删除按钮
+            var td=document.createElement('td');
+            var btn1=document.createElement('button');//插入一个删除按钮
+            var btn2=document.createElement('button');//插入一个修改按钮
+            btn1.className='del';
+            btn1.innerHTML='删除';
+            btn2.innerHTML='修改';
+            tr.appendChild(td);
+            td.appendChild(btn1);
+            td.appendChild(btn2); 
+            btn1.onclick=function(e){
+                if(e.target.className==='del'){
+                    e.target.parentNode.parentNode.parentNode.removeChild(e.target.parentNode.parentNode);
+                 //删除  button   的   td   的 tr    的   table             button     td        tr 
+                }
+            }
+       }
+   
+       
+       
+    }
+
+console.log(document.querySelector('.del'))
+    // })()
+    </script>
+</body>
+</html>

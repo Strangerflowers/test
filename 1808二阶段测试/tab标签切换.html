@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>tab标签切换</title>
+	<style>
+	#tab span{display:inline-block;padding:5px 15px;background-color:#ddd;margin:0 5px;border:1px solid #ddd;border-bottom:none;}
+	#tab span.active,.tab-content.active{background-color:#fd5;border-color:#fd5;}
+	.tab-content{padding:15px;width:500px;min-height:200px;border:1px solid #ddd;background-color:#efefef;}
+	</style>
+	<script>
+	window.onload = function(){
+		/*
+			tab标签切换
+		 */
+		var tab = document.getElementById('tab');
+		var spans = tab.getElementsByTagName('span');
+		var content = document.getElementsByClassName('tab-content');
+
+		// 先隐藏除第一个以外的.content
+		for(var i=1;i<content.length;i++){
+			content[i].style.display = 'none';
+		}
+
+		// 给第一个加高亮
+		spans[0].className = 'active';
+		content[0].className = 'tab-content active'
+
+		// 给span标签绑定点击事件
+		// 点击时，显示对应的.content
+		for(var i=0;i<spans.length;i++){
+			// 把i值赋值给每个按钮的属性
+			spans[i].index = i;
+			spans[i].onmouseover = function(){
+				// for循环隐藏所有.content
+				for(var i=0;i<content.length;i++){console.log(i)
+					content[i].style.display = 'none';
+					content[i].className = 'tab-content';
+
+					// 把所有span背景颜色改成灰色
+					spans[i].className = '';
+
+				}
+
+				// 显示相应.content
+				content[this.index].style.display = 'block';
+				content[this.index].className = 'tab-content active';
+
+				// 高亮显示当前tab标签
+				spans[this.index].className = 'active';
+
+
+			}
+		}
+		
+		
+	}
+		
+	</script>
+</head>
+<body>
+	<h1>tab标签切换（20分）</h1>
+	<div id="tab"><span>篮球</span><span>足球</span><span>羽毛球</span><span>乒乓球</span></div>
+	<div class="tab-content">篮球很激烈，我是科比，我痴迷于篮球运动</div>
+	<div class="tab-content">足球更激烈，我是C罗，我热爱足球的狂热</div>
+	<div class="tab-content">羽毛球很文艺，我是林丹，卫冕舍我其谁</div>
+	<div class="tab-content">乒乓球更文艺，我是张继科，我为乒球代言</div>
+
+	<div class="content">
+        <h4>要求：</h4>
+        <ol>
+            <li>默认第一个高亮显示</li>
+            <li>鼠标滑入时显示相应tag内容</li>
+        </ol>
+    </div>
+</body>
+</html>

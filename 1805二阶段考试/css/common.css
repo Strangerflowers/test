@@ -1,0 +1,12 @@
+html,body{height:100%;}
+ul{padding:0;margin:0;}
+.explain{position:relative;margin:-8px;padding:10px;border-bottom:1px dashed #ddd;padding-bottom:30px;margin-bottom:30px;line-height:1.5;background:#efefef;box-shadow:0 10px 10px rgba(0,0,0,.2);box-sizing: border-box;}
+.explain h1{margin:0;}
+.explain li ul{margin-left:15px;line-height:1.5;}
+.explain li ul ul{font-size:12px;color:#666;}
+.explain .btn-hide{position: absolute;right:10px;bottom:10px;}
+.explain a{text-decoration: none;}
+.explain a:hover{text-decoration: underline;color:#58bc58;}
+
+.explain-right{position:fixed;top:0;right:0;bottom:0;width:400px;margin:0;}
+.explain-right + div.container{margin-right:400px;}

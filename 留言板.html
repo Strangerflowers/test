@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Document</title>
+    <style type="text/css">
+    *{margin: 0;padding: 0;}
+    h1{
+        text-align: center;
+    }
+    #box{
+        margin:0 auto;
+       width:80%; 
+       border:1px solid #ccc;
+       position:relative;
+    }
+        #dv{
+            margin: 0 auto;
+            width: 70%;
+            height: 500px;
+            /*overflow-x:hidden;*/
+            border:2px solid #ccc;
+            overflow:hidden;
+        }
+
+    textarea{
+        width: 70%;
+        margin:10px 15%;
+    }
+button{
+    width: 70%;
+    height: 50px;
+        margin:0 15%;
+}
+.txP{
+    border-bottom: 1px dashed #ccc;
+    width: 100%;
+    height: 50px;
+    line-height: 20px;
+ 
+}
+#jishu{
+/*background: red;*/
+font-size: 10px;
+position: absolute;
+top:586px;left: 940px;
+}
+
+    </style>
+</head>
+<body><div id="box">
+    <h1>留言板</h1>
+    <span id="jishu"><i class="txnum">0</i>/<i>20</i></span>
+    <div id="dv"></div>
+    <!-- <input type="text" id="tx" /> -->
+    <textarea id="tx" rows="3" cols="20">&nbsp;</textarea>
+    <button id="btn">提交</button></div>
+    
+    <script type="text/javascript">
+    var _dv=document.getElementById("dv");
+    var tx=document.getElementById("tx");
+    var btn=document.getElementById("btn");var i= 0;
+    var txNum=document.getElementsByClassName('txnum')[0];
+        var news=[];
+        var _tx = tx.value;
+        // _dv.innerHTML=tianjia(news);
+        //点击按钮把新的内容添加上去
+        tx.onkeydown=function(){
+            var maxTex=tx.value.length;
+            txNum.innerHTML=maxTex;
+            if(maxTex>=20){
+            _tx=_tx.split('').splice(20,1,'');
+            
+            }
+            
+        }
+        console.log(_tx)
+        //按alt和回车提交
+        document.onkeydown=function(e){
+            var key= e.which||e.keyCode
+            if(e.altKey&&key==13){
+                sub();
+            }
+        }
+        btn.onclick=function(){
+            sub();
+        }
+        function sub(){//添加新的留言函数
+            // var _tx = tx.value;
+            news.unshift(_tx);
+            _dv.innerHTML=tianjia(news);
+            tx.value="";
+            tx.focus();
+        }
+        function tianjia(arr){ //添加新的留言           
+           return arr.map(function(msg){
+            return '<div class="txP"><p style="line-height:50px; height: 65%;">'+msg+'</p><span style="float:right;font-size:10px;color:#ccc;">'+date()+'</span></div>'}).join('\n');
+        }   
+        function date(){//获取当前时间
+        var d=new Date();
+        var year =d.getFullYear();
+        var month=d.getMonth()+1 ,date=d.getDate(),hours=d.getHours();
+        var minutes=d.getMinutes(),seconds=d.getSeconds();
+        month = month<10 ? '0'+month : month;//补零
+        seconds = seconds<10 ? '0'+seconds : seconds;//补零
+        return date=year+'-'+month+'-'+date+'&nbsp;&nbsp;'+hours+':'+minutes+':'+seconds;
+        console.log(date)
+        }
+
+
+
+    </script>
+</body>
+</html>

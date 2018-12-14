@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <script type="text/javascript">
+        var tagName=10;
+        var obj={
+            tagName:20,
+            show:function(){
+                console.log(this.tagName);
+            }
+        }
+        obj.show();
+        var show=obj.show;
+        show();
+        var res=show.bind(document.body);
+        res();
+
+        // 字符串跟任何特殊数据类型相加都是拼接
+        // 数字与undefined相加得到NaN    123+undefined =NaN 
+        // 数字与NaN相加也是得到NaN     123+NaN =NaN 
+        // 数字与null相加得到数字即 123+null=123；
+        // var a=123;
+        // var b=NaN;
+        // var c=null;
+        // var d=undefined;
+        // console.log(a+b);
+        // console.log(a+c);
+        // console.log(a+d);
+        // // 4
+        // console.log(NaN==NaN);
+        // console.log(null===undefined);
+        // console.log("6">"11");
+        // var x=['abcde',123456];
+
+
+        // // 5
+        // var y=typeof typeof x[1];//得到字符串
+        // console.log(y);
+
+        // // 6
+        // // split();//用于把一个字符串分割成字符串数组
+        // var str='I am a good student ';
+        // var a=str.indexOf("good");
+        // console.log(a);
+
+
+
+        // // parseInt(8*8)
+        // window.onload=function(){
+            
+       
+        // var arr=[];
+        // var str=['a','b','c','d','e'];
+        // for(var i=str.length-1;i>=0;i--){
+        //     arr.push(str[i]);
+        // }
+        // console.log(arr);
+        //  }
+        </script>
+    </head>
+    <body>
+    </body>
+</html>

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <style type="text/css">
+            li{list-style:none;border:1px solid #ccc;width: 200px;padding:2px 5px;}
+            .dspn{display:none;color:#58bc58;font-size:14px;}
+            #choose{position:relative;}
+            #output{position:absolute;top:0;left:0;margin-left:20px;}
+        </style>
+        <script type="text/javascript">
+            document.addEventListener('DOMContentLoaded',function(){
+                var arr = [{ "name": "北京", "id": 110100, "hot": true },
+            { "name": "上海", "id": 310000, "hot": true },
+            { "name": "南京市", "id": 320100 },
+            { "name": "广州", "id": 440100, "hot": true },
+            { "name": "深圳", "id": 440300, "hot": true },
+            { "name": "成都", "id": 510100 },
+            { "name": "杭州", "id": 330100 },
+            { "name": "南宁", "id": 450100 },
+            { "name": "大连", "id": 210200 }
+        ];
+                var city=document.getElementById('city');
+                var output = document.getElementById('output');
+                var txt= document.getElementById('txt');
+                var citylist=city.getElementByClassName('citylist')[0];
+                var content='';
+                for(var i=0,j=arr.length;i<j;i++){
+                    var li=document.createElement('li');
+                    if(arr[i].hot){
+                        li.className='gl';
+                        var fl= document.createElement('span');
+                        fl.className='name';
+                        var fr=document.createElement('span');
+                        fr.className='code';
+                        fl.innerText = arr[i].name;
+                        fr.innerText = arr[i].id;
+                        li.appendChild(fl);
+                        li.appendChild(fr);
+                        citylist.appendChild(li);
+                    }
+                    citylist.addEventListener('click',function(e){
+                        e=e|| window.event;
+                        var target=e.target || e.srcElement;
+                        var span='';
+                        if(target.tagName.toLocaleLowerCase()==='li'){
+                            span=target.firstChild.innerText;
+                        }else if(target.className==='name'){
+                            span=target.innerText;
+                            citylist.style.display='none';
+                        }else if(target.className==='code'){
+                            span = target.parentNode.firstChild.innerText;
+
+                        }
+                        output.innerText='你选择了'+span
+                        txt.value=span;
+
+                    });
+                    txt.addEventListener('focus',function(e){
+                        citylist.style.display='block';
+                    });
+                    txt.addEventListener('blur',function(e){
+                        setTimeout(function(){
+                            citylist.style.display='none';
+                        },500);
+                    })
+                }
+          
+        </script>
+
+    </head>
+    <body>
+    <label >请选择</label><input type="text" id="choose" name="choose" />
+    <span class="dspn">您选择了</span>
+    <p id="output"></p>
+    </body>
+</html>
